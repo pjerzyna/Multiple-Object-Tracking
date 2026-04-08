@@ -1,6 +1,10 @@
+from track import Track
+from kalman_filter import create_kalman_filter
+from association import associate_detections_to_tracks
+
 class MultiObjectTracker:
     """
-    A class to manage multiple object trackers. It's methods:
+    Tracker Motion Model - A class to manage multiple object trackers. It's methods:
     - predict()
     - associate()
     - update()
@@ -10,14 +14,36 @@ class MultiObjectTracker:
 
     def __init__(self):
         self.trackers = []
+        self.next_id = 1
 
     def add_tracker(self, tracker):
         # This method should add a new tracker to the list of trackers
         self.trackers.append(tracker)
 
-    def update(self, frame):
-        for tracker in self.trackers:
-            tracker.update(frame)
+    def update(self, detections):
+        # 1. Predykcja polozenia
+        self.predict()
+
+        # 2. Asocjacja detekcji do trackerow
+        matches, unmatched_dets, unmatched_tracks = associate_detections_to_tracks(detections, self.trackers)
+
+        # 3. Aktualizacja dopasowanych trackerow
+        for t, d in matches:
+            bbox_only = detections[d][:4]
+            self.trackers[t].update(bbox_only)
+
+        # 4. Initializacja nowych trackerow dla niedopasowanych detekcji
+        for d in unmatched_dets:
+            bbox = detections[d][:4]
+            kf = create_kalman_filter(bbox)
+            self.trackers.append(Track(self.next_id, bbox, kf))
+            self.next_id += 1
+
+        # 5. Usuwanie trackerow, ktore nie byly aktualizowane przez pewna liczbe klatek
+        self.trackers = [
+            t for t in self.trackers
+            if t.time_since_update < 10
+        ]
     
     def predict(self):
         for tracker in self.trackers:
@@ -35,6 +61,5 @@ class MultiObjectTracker:
         # This method should delete trackers that have not been updated for a certain number of frames
         pass
 
-    @staticmethod
     def get_tracked_objects(self):
-        return [tracker.get_position() for tracker in self.trackers]
+        return [(t.id, t.get_position()) for t in self.trackers]

@@ -1,0 +1,7 @@
+Musisz sam dodjsc jakie to zaleznosci trzeba pododawac, no mam balagan, na pewno to:
+filterpy
+argparse
+numpy
+scipy
+
+ps trzeba usunac __pychace__ ktore przez przypadek wrzucielm 
