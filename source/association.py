@@ -3,7 +3,7 @@ import numpy as np
 from iou import compute_iou
 
 
-IOU_THRESHOLD = 0.3
+IOU_THRESHOLD = 0.2  # Lowered from 0.3 to allow more flexibility in matching
 
 def associate_detections_to_tracks(detections, tracks):
     """

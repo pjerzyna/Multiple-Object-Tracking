@@ -32,17 +32,22 @@ class MultiObjectTracker:
             bbox_only = detections[d][:4]
             self.trackers[t].update(bbox_only)
 
-        # 4. Initializacja nowych trackerow dla niedopasowanych detekcji
+        # 4. Increment age for unmatched tracks (they may still be visible but undetected)
+        for t in unmatched_tracks:
+            self.trackers[t].time_since_update += 1
+
+        # 5. Initializacja nowych trackerow dla niedopasowanych detekcji
         for d in unmatched_dets:
             bbox = detections[d][:4]
             kf = create_kalman_filter(bbox)
             self.trackers.append(Track(self.next_id, bbox, kf))
             self.next_id += 1
 
-        # 5. Usuwanie trackerow, ktore nie byly aktualizowane przez pewna liczbe klatek
+        # 6. Usuwanie trackerow, ktore nie byly aktualizowane przez za dluga liczbe klatek
+        # Keep tracks alive longer to reduce ID switches caused by temporary occlusions
         self.trackers = [
             t for t in self.trackers
-            if t.time_since_update < 10
+            if t.time_since_update <= 50  # Increased from 10 to 50 frames
         ]
     
     def predict(self):
