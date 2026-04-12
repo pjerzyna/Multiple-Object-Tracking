@@ -9,11 +9,10 @@ with open("requirements.txt", "r", encoding="utf-8") as fh:
 setup(
     name="multiple-object-tracking",
     version="1.0.0",
-    author="AVS Student",
     description="SORT-based Multiple Object Tracking algorithm",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/yourusername/Multiple-Object-Tracking",
+    url="https://github.com/pjerzyna/Multiple-Object-Tracking",
     packages=find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
@@ -26,10 +25,5 @@ setup(
     ],
     python_requires=">=3.7",
     install_requires=requirements,
-    entry_points={
-        "console_scripts": [
-            "mot-tracker=source.main:main",
-        ],
-    },
 )
 
