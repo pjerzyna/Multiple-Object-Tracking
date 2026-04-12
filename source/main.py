@@ -18,7 +18,6 @@ Usage:
     python main.py --mode visualization --sequence MOT_02
     python main.py --mode evaluation
 
-Author: AVS Student
 """
 
 import argparse
