@@ -4,11 +4,6 @@ Multiple Object Tracking (MOT) - Main Entry Point
 This module provides the main command-line interface for the SORT tracking algorithm.
 Supports multiple modes: tracking, evaluation, visualization, and component testing.
 
-Available basic debug modes:
-    - det: ...
-    - seqinfo: ...
-    - iou: ...
-
 Available Modes:
     - tracker: Process test sequences (MOT_01, MOT_06, MOT_07)
     - single_tracker: Process single test sequence (MOT_01)
@@ -29,7 +24,6 @@ Usage:
 import argparse
 import os
 import glob
-#from pprint import pprint
 from dataset import load_detections, load_seqinfo
 from iou import compute_iou
 from tracker import MultiObjectTracker
@@ -40,7 +34,7 @@ from visualization import visualize_dataset_sequence
 parser = argparse.ArgumentParser(description="MOT dataset parser")
 parser.add_argument(
     "--mode",
-    choices=["det", "seqinfo", "iou", "tracker", "single_tracker", "train_tracker", "evaluation", "visualization"],
+    choices=["tracker", "single_tracker", "train_tracker", "evaluation", "visualization"],
     required=True
 )
 parser.add_argument(
@@ -66,26 +60,6 @@ args = parser.parse_args()
 
 
 if __name__ == "__main__":
-    # to do usuniecia!!!
-    
-    # if args.mode == "det":
-    #     # Check whether my file dataset.py correctly reads det.txt [x, y, w, h, conf]
-    #     PATH_DET = "../evs_mot-test/MOT_01/det/det.txt"
-    #     detections = load_detections(PATH_DET)
-    #     print(f"Frame 1 detections (total: {len(detections[1])}):")
-    #     pprint(detections[1], width=60)
-
-    # elif args.mode == "seqinfo":
-    #     # Check whether my print from seqinfo works (frameRate, imWidth, ect.) 
-    #     PATH_SEQINFO = "../evs_mot-train/MOT_02/seqinfo.ini"
-    #     if os.path.exists(PATH_SEQINFO):
-    #         seqinfo = load_seqinfo(PATH_SEQINFO)
-    #         print(f"--- Sequence Info for ---")
-    #         for key, value in seqinfo.items():
-    #             print(f"{key:15}: {value}")
-    #     else:
-    #         print(f"Error: Path {PATH_SEQINFO} does not exist.")
-
     if args.mode == "tracker":
         # Ensure data directory exists
         os.makedirs("../data_test", exist_ok=True)
