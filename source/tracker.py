@@ -15,6 +15,8 @@ class MultiObjectTracker:
     def __init__(self):
         self.trackers = []
         self.next_id = 1
+        self.max_age = 3
+        self.min_hits = 3
 
     def add_tracker(self, tracker):
         # This method should add a new tracker to the list of trackers
@@ -47,7 +49,7 @@ class MultiObjectTracker:
         # Keep tracks alive longer to reduce ID switches caused by temporary occlusions
         self.trackers = [
             t for t in self.trackers
-            if t.time_since_update <= 50
+            if t.time_since_update <= self.max_age
         ]
     
     def predict(self):
@@ -67,4 +69,8 @@ class MultiObjectTracker:
         pass
 
     def get_tracked_objects(self):
-        return [(t.id, t.get_position()) for t in self.trackers]
+        return [
+            (t.id, t.get_position()) 
+            for t in self.trackers 
+            if t.hits >= self.min_hits and t.time_since_update <= 1
+        ]

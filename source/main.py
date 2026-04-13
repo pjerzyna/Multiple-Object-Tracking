@@ -5,7 +5,6 @@ This module provides the main command-line interface for the SORT tracking algor
 Supports multiple modes: tracking, evaluation, visualization, and component testing.
 """
 
-# !!! Kalman to chyba w nim jest problem z odlatywaniem ramek !!!
 
 import argparse
 import os
@@ -122,12 +121,8 @@ if __name__ == "__main__":
                 tracker.update(detections[frame])
                 
                 for track_id, bbox in tracker.get_tracked_objects():
-                    """ tu jest cos nie tak!!!!"""
-                    # Format: frame, id, x, y, w, h, conf, class, visibility, unused
-                    #<detection_confidence> - miara pewności detektora co do detekcji (w zakresie 0 - 1)
-                    #<eval_flag> - flaga informująca, czy dany obiekt jest traktowany jako wzorcowy i powinien być brany pod uwagę w ewaluacji (0 - nie, 1 - tak)
-                    #<class> - klasa obiektu, interesuje nas klasa 1, czyli sylwetki ludzi, którzy nie są wewnątrz budynków i nie są odbiciami (np w szybach budynków/samochodów).
-                    #<visibility> - liczba w zakresie (0 - 1] informująca, jaka część obiektu jest widoczna w danej klatce
+                    # Format: <frame>, <id>, <bb_left>, <bb_top>, <bb_width>, <bb_height>, <conf>, <class>, <visibility>, <unused>
+                    # We set confidence to 1 and remaining fields to -1 as per tracking output standards.
                     line = f"{frame},{track_id},{bbox[0]:.2f},{bbox[1]:.2f},{bbox[2]:.2f},{bbox[3]:.2f},1,-1,-1,-1\n"
                     f.write(line)
         
@@ -162,8 +157,7 @@ if __name__ == "__main__":
                     tracker.update(detections[frame])
                     
                     for track_id, bbox in tracker.get_tracked_objects():
-                        # Format: frame, id, x, y, w, h, conf, class, visibility, unused
-                        # Zgodnie z poleceniem: <frame>,<id>,<bb_left>,<bb_top>,<bb_width>,<bb_height>,1,-1,-1,-1
+                        # Format: <frame>,<id>,<bb_left>,<bb_top>,<bb_width>,<bb_height>,1,-1,-1,-1
                         line = f"{frame},{track_id},{bbox[0]:.2f},{bbox[1]:.2f},{bbox[2]:.2f},{bbox[3]:.2f},1,-1,-1,-1\n"
                         f.write(line)
             

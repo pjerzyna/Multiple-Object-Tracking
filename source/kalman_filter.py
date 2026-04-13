@@ -30,15 +30,15 @@ def create_kalman_filter(bbox):
     ], dtype=np.float32)
     
     # Measurement noise: higher values = trust model more than measurements
-    kf.R = np.eye(4, dtype=np.float32) * 5.0
+    kf.R = np.eye(4, dtype=np.float32) * 1.0
     
     # Process noise: lower values = expect smooth motion
-    kf.Q = np.eye(6, dtype=np.float32) * 0.1
-    kf.Q[4:, 4:] *= 0.01  # Even less process noise on velocity
+    kf.Q = np.eye(6, dtype=np.float32) * 0.01
+    kf.Q[4:, 4:] *= 0.1  # Even less process noise on velocity
     
     # State covariance: initial uncertainty
-    kf.P = np.eye(6, dtype=np.float32)
-    kf.P[4:, 4:] *= 1000.0  # High uncertainty on velocity initially
+    kf.P = np.eye(6, dtype=np.float32) * 10
+    kf.P[4:, 4:] *= 10.0  # High uncertainty on velocity initially
     
     # Initialize state
     kf.x = np.zeros((6, 1), dtype=np.float32)

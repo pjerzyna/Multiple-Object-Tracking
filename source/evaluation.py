@@ -163,14 +163,13 @@ def compute_mota(gt_data, pred_data, iou_threshold=0.5):
     all_frames = set(gt_data.keys()) | set(pred_data.keys())
     
     total_gt = 0; total_fn = 0 ; total_fp = 0  ; total_idsw = 0 
-    
+
     # Track ID mappings across frames for ID switch detection
-    gt_id_to_pred_id = defaultdict(set)  # Maps gt_id to set of pred_ids seen
-    
+    last_mapping = {}
+
     for frame in sorted(all_frames):
         gt_objects = gt_data.get(frame, [])
         pred_objects = pred_data.get(frame, [])
-        
         total_gt += len(gt_objects)
         
         # Match detections
@@ -185,13 +184,13 @@ def compute_mota(gt_data, pred_data, iou_threshold=0.5):
         for gt_idx, pred_idx, _ in matches:
             gt_id = gt_objects[gt_idx]['id']
             pred_id = pred_objects[pred_idx]['id']
-            gt_id_to_pred_id[gt_id].add(pred_id)
-        
-        # ID switches = number of different pred_ids for each gt_id - 1
-        for gt_id, pred_ids in gt_id_to_pred_id.items():
-            if len(pred_ids) > 1:
-                total_idsw += len(pred_ids) - 1
-    
+
+
+            if gt_id in last_mapping and last_mapping[gt_id] != pred_id:
+                total_idsw += 1
+
+            last_mapping[gt_id] = pred_id
+
     # Compute MOTA
     if total_gt == 0:
         mota = 0.0
