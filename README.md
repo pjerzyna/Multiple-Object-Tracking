@@ -99,14 +99,11 @@ Multiple-Object-Tracking/
 ## Performance
 
 Test results on training sequences:
-- MOT_01: ???% MOTA
-- MOT_02: ???% MOTA
-- MOT_03: ???% MOTA
-- MOT_04: ???% MOTA
-- MOT_05: ???% MOTA
-- MOT_06: ???% MOTA
-- MOT_07: ???% MOTA
-- **Average: ???% MOTA**
+- MOT_02: 50.84% MOTA
+- MOT_03: 47.64% MOTA
+- MOT_04: 54.37% MOTA
+- MOT_05: 42.94% MOTA
+- **Average: 48.95% MOTA**
 
 
 ## References
