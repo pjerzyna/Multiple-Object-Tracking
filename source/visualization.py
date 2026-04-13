@@ -187,7 +187,7 @@ def visualize_sequence(img_dir, tracking_results, gt_results=None, output_video=
             for gt_obj in gt_results[frame_idx]:
                 gt_id = gt_obj['id']
                 bbox = gt_obj['bbox']
-                gt_color = (200, 150, 0)  # Cyan-ish for ground truth
+                gt_color = (200, 150, 0)  # Cyanish for ground truth
                 cv2.rectangle(frame, (bbox[0], bbox[1]), (bbox[0] + bbox[2], bbox[1] + bbox[3]), gt_color, 1)
         
         # Draw tracking results
@@ -251,16 +251,25 @@ def visualize_dataset_sequence(sequence_name, data_dir, gt_base_dir, img_base_di
     """
     # Construct paths
     pred_path = os.path.join(data_dir, f"{sequence_name}.txt")
-    gt_path = os.path.join(gt_base_dir, sequence_name, "gt", "gt.txt")
     img_dir = os.path.join(img_base_dir, sequence_name, "img1")
     
+    # For mot-test 
+    gt_path = None
+    if gt_base_dir is not None:
+        gt_path = os.path.join(gt_base_dir, sequence_name, "gt", "gt.txt")
+
     # Load data
-    tracking_results = load_tracking_results(pred_path)
-    gt_results = load_ground_truth(gt_path)
-    
+    tracking_results = load_tracking_results(pred_path)    
     if not tracking_results:
         print(f"Warning: No tracking results found for {sequence_name}")
     
+    gt_results = None
+    if gt_path and os.path.exists(gt_path):
+        gt_results = load_ground_truth(gt_path)
+    else:
+        print(f"Info: Ground Truth not found or skipped for {sequence_name}")
+
+
     print(f"\nVisualizing {sequence_name}:")
     print(f"  Tracking results: {pred_path}")
     print(f"  Ground truth: {gt_path}")
