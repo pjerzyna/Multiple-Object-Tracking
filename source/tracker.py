@@ -15,8 +15,8 @@ class MultiObjectTracker:
     def __init__(self):
         self.trackers = []
         self.next_id = 1
-        self.max_age = 3
-        self.min_hits = 3
+        self.max_age = 5
+        self.min_hits = 1
 
     def add_tracker(self, tracker):
         # This method should add a new tracker to the list of trackers
@@ -56,11 +56,11 @@ class MultiObjectTracker:
         for tracker in self.trackers:
             tracker.predict()
     
-    def associate(self, detections):
+    def associate(self):
         # This method should implement the association logic between detections and existing trackers
         pass
 
-    def create_tracks(self, detections):
+    def create_tracks(self):
         # This method should create new trackers for unmatched detections
         pass
 

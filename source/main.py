@@ -90,7 +90,9 @@ if __name__ == "__main__":
 
             with open(output_path, "w") as f:
                 for frame in sorted(detections.keys()):
-                    tracker.update(detections[frame])
+                    # confidence >= 0.4
+                    valid_detections = [det for det in detections[frame] if det[4] >= 0.4]
+                    tracker.update(valid_detections)
                     
                     for track_id, bbox in tracker.get_tracked_objects():
                         # Format: <frame>,<id>,<bb_left>,<bb_top>,<bb_width>,<bb_height>,1,-1,-1,-1
@@ -118,7 +120,9 @@ if __name__ == "__main__":
 
         with open(output_path, "w") as f:
             for frame in sorted(detections.keys()):
-                tracker.update(detections[frame])
+                # confidence >= 0.4
+                valid_detections = [det for det in detections[frame] if det[4] >= 0.4]
+                tracker.update(valid_detections)
                 
                 for track_id, bbox in tracker.get_tracked_objects():
                     # Format: <frame>, <id>, <bb_left>, <bb_top>, <bb_width>, <bb_height>, <conf>, <class>, <visibility>, <unused>
@@ -154,7 +158,9 @@ if __name__ == "__main__":
 
             with open(output_path, "w") as f:
                 for frame in sorted(detections.keys()):
-                    tracker.update(detections[frame])
+                    # confidence >= 0.4
+                    valid_detections = [det for det in detections[frame] if det[4] >= 0.4]
+                    tracker.update(valid_detections)
                     
                     for track_id, bbox in tracker.get_tracked_objects():
                         # Format: <frame>,<id>,<bb_left>,<bb_top>,<bb_width>,<bb_height>,1,-1,-1,-1

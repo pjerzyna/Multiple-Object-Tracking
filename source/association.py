@@ -3,7 +3,7 @@ import numpy as np
 from iou import compute_iou
 
 
-IOU_THRESHOLD = 0.2 
+IOU_THRESHOLD = 0.52
 
 def associate_detections_to_tracks(detections, tracks):
     """
@@ -26,12 +26,15 @@ def associate_detections_to_tracks(detections, tracks):
     track_idx, det_idx = linear_sum_assignment(cost_matrix)
     
     matches = []
+    unmatched_tracks = list(set(range(len(tracks))) - set(track_idx))
+    unmatched_detections = list(set(range(len(detections))) - set(det_idx))
+
     for t, d in zip(track_idx, det_idx):
         if cost_matrix[t, d] < (1 - IOU_THRESHOLD):
             matches.append((t, d))
-
-    unmatched_tracks = list(set(range(len(tracks))) - set(track_idx))
-    unmatched_detections = list(set(range(len(detections))) - set(det_idx))
+        else:
+            unmatched_tracks.append(t)
+            unmatched_detections.append(d)
 
 
     return matches, unmatched_detections, unmatched_tracks

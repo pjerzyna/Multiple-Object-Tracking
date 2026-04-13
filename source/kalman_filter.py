@@ -8,10 +8,10 @@ def create_kalman_filter(bbox):
     Measurement: [x, y, w, h] (position and size only)
     """
     kf = KalmanFilter(dim_x=6, dim_z=4)
-    
+    dt = 1.0
+
     # State transition matrix (constant velocity model)
     # x' = x + vx*dt, y' = y + vy*dt, etc. (assuming dt=1)
-    dt = 1.0
     kf.F = np.array([
         [1, 0, 0, 0, dt, 0],
         [0, 1, 0, 0, 0, dt],
@@ -39,9 +39,14 @@ def create_kalman_filter(bbox):
     # State covariance: initial uncertainty
     kf.P = np.eye(6, dtype=np.float32) * 10
     kf.P[4:, 4:] *= 10.0  # High uncertainty on velocity initially
+
+    # Centre 
+    x, y, w, h = bbox
+    cx = x + w / 2.0
+    cy = y + h / 2.0
     
     # Initialize state
     kf.x = np.zeros((6, 1), dtype=np.float32)
-    kf.x[:4] = np.array(bbox).reshape((4, 1))
+    kf.x[:4] = np.array([cx, cy, w, h]).reshape((4, 1))
     
     return kf
