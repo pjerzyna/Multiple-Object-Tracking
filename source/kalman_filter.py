@@ -4,8 +4,6 @@ import numpy as np
 
 def create_kalman_filter(bbox):
     """
-    Create and initialize a Kalman filter for tracking bounding boxes.
-    
     State: [x, y, w, h, vx, vy] (position, size, velocity)
     Measurement: [x, y, w, h] (position and size only)
     """
@@ -32,7 +30,6 @@ def create_kalman_filter(bbox):
     ], dtype=np.float32)
     
     # Measurement noise: higher values = trust model more than measurements
-    # Lowered from 10.0 to balance between model and measurements
     kf.R = np.eye(4, dtype=np.float32) * 5.0
     
     # Process noise: lower values = expect smooth motion

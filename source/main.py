@@ -3,20 +3,6 @@ Multiple Object Tracking (MOT) - Main Entry Point
 
 This module provides the main command-line interface for the SORT tracking algorithm.
 Supports multiple modes: tracking, evaluation, visualization, and component testing.
-
-Available Modes:
-    - tracker: Process test sequences (MOT_01, MOT_06, MOT_07)
-    - single_tracker: Process single test sequence (MOT_01)
-    - test_tracker: Process training sequences (MOT_02-05) for validation
-    - evaluation: Evaluate results using MOTA metric
-    - visualization: Visualize tracking results on video frames
-
-Usage:
-    cd source
-    python main.py --mode tracker
-    python main.py --mode visualization --sequence MOT_02
-    python main.py --mode evaluation
-
 """
 
 # !!! Kalman to chyba w nim jest problem z odlatywaniem ramek !!!
@@ -24,24 +10,43 @@ Usage:
 import argparse
 import os
 import glob
-from dataset import load_detections, load_seqinfo
-from iou import compute_iou
+from dataset import load_detections
 from tracker import MultiObjectTracker
 from evaluation import evaluate_sequences
 from visualization import visualize_dataset_sequence
 
 
-parser = argparse.ArgumentParser(description="MOT dataset parser")
+parser = argparse.ArgumentParser(
+    description="MOT dataset parser",
+    epilog="""
+Modes:
+  tracker          - Process all test sequences (MOT_01, MOT_06, MOT_07)
+  single_tracker   - Process single test sequence (MOT_01)
+  train_tracker    - Process all training sequences (MOT_02-05) for validation
+  evaluation       - Evaluate results using MOTA metric
+  visualization    - Visualize tracking results on video frames
+
+Examples:
+  python main.py --mode tracker
+  python main.py --mode single_tracker
+  python main.py --mode train_tracker
+  python main.py --mode evaluation
+  python main.py --mode visualization --sequence MOT_02
+  python main.py --mode visualization --sequence MOT_01 --output-video output.mp4
+    """,
+    formatter_class=argparse.RawDescriptionHelpFormatter
+)
 parser.add_argument(
     "--mode",
     choices=["tracker", "single_tracker", "train_tracker", "evaluation", "visualization"],
-    required=True
+    required=True,
+    help="Operation mode to execute"
 )
 parser.add_argument(
     "--sequence",
     type=str,
     default="MOT_02",
-    help="Sequence name: (e.g., MOT_01, MOT_02, MOT_06)"
+    help="Sequence name for visualization (e.g., MOT_01, MOT_02, MOT_06)"
 )
 parser.add_argument(
     "--data-dir",
@@ -89,8 +94,7 @@ if __name__ == "__main__":
                     tracker.update(detections[frame])
                     
                     for track_id, bbox in tracker.get_tracked_objects():
-                        # Format: frame, id, x, y, w, h, conf, class, visibility, unused
-                        # Zgodnie z poleceniem: <frame>,<id>,<bb_left>,<bb_top>,<bb_width>,<bb_height>,1,-1,-1,-1
+                        # Format: <frame>,<id>,<bb_left>,<bb_top>,<bb_width>,<bb_height>,1,-1,-1,-1
                         line = f"{frame},{track_id},{bbox[0]:.2f},{bbox[1]:.2f},{bbox[2]:.2f},{bbox[3]:.2f},1,-1,-1,-1\n"
                         f.write(line)
             

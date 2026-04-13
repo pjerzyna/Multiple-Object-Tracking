@@ -6,8 +6,6 @@ from iou import compute_iou
 
 def load_ground_truth(gt_path):
     """
-    Load ground truth data from gt.txt file.
-    
     Format: <frame>,<id>,<bb_left>,<bb_top>,<bb_width>,<bb_height>,<eval_flag>,<class>,<visibility>
     
     Returns:
@@ -53,8 +51,6 @@ def load_ground_truth(gt_path):
 
 def load_predictions(pred_path):
     """
-    Load prediction data from txt file.
-    
     Format: <frame>,<id>,<bb_left>,<bb_top>,<bb_width>,<bb_height>,<conf>,<class>,<visibility>,<unused>
     
     Returns:
@@ -166,10 +162,7 @@ def compute_mota(gt_data, pred_data, iou_threshold=0.5):
     """
     all_frames = set(gt_data.keys()) | set(pred_data.keys())
     
-    total_gt = 0
-    total_fn = 0  # False negatives
-    total_fp = 0  # False positives
-    total_idsw = 0  # ID switches
+    total_gt = 0; total_fn = 0 ; total_fp = 0  ; total_idsw = 0 
     
     # Track ID mappings across frames for ID switch detection
     gt_id_to_pred_id = defaultdict(set)  # Maps gt_id to set of pred_ids seen
@@ -185,10 +178,7 @@ def compute_mota(gt_data, pred_data, iou_threshold=0.5):
             gt_objects, pred_objects, iou_threshold
         )
         
-        # Count false negatives
         total_fn += len(unmatched_gt)
-        
-        # Count false positives
         total_fp += len(unmatched_pred)
         
         # Count ID switches
@@ -220,9 +210,7 @@ def compute_mota(gt_data, pred_data, iou_threshold=0.5):
 
 
 def evaluate_sequences(data_dir, gt_base_dir):
-    """
-    Evaluate all sequences in data_dir against ground truth in gt_base_dir.
-    
+    """    
     Args:
         data_dir: directory with prediction txt files (e.g., ../data_test)
         gt_base_dir: base directory with gt files (e.g., ../evs_mot-train)

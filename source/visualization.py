@@ -5,9 +5,7 @@ from collections import defaultdict
 
 
 def load_tracking_results(pred_path):
-    """
-    Load tracking results from txt file.
-    
+    """    
     Format: <frame>,<id>,<bb_left>,<bb_top>,<bb_width>,<bb_height>,...
     
     Returns:
@@ -39,9 +37,7 @@ def load_tracking_results(pred_path):
 
 
 def load_ground_truth(gt_path):
-    """
-    Load ground truth data from gt.txt file.
-    
+    """    
     Format: <frame>,<id>,<bb_left>,<bb_top>,<bb_width>,<bb_height>,...
     
     Returns:
@@ -85,8 +81,6 @@ def generate_colors(n_tracks):
 
 def draw_bbox(frame, bbox, track_id, color, label_type="track"):
     """
-    Draw a bounding box on the frame.
-    
     Args:
         frame: cv2 image
         bbox: [x, y, w, h]
@@ -100,45 +94,22 @@ def draw_bbox(frame, bbox, track_id, color, label_type="track"):
     
     thickness = 2
     
-    # Draw rectangle
     cv2.rectangle(frame, (x, y), (x2, y2), color, thickness)
-    
-    # Draw label
     label = f"{'ID' if label_type == 'track' else 'GT'}: {track_id}"
     font = cv2.FONT_HERSHEY_SIMPLEX
     font_scale = 0.5
     font_thickness = 1
     
-    # Get text size for background
     text_size = cv2.getTextSize(label, font, font_scale, font_thickness)[0]
     
-    # Draw background rectangle for text
-    cv2.rectangle(
-        frame,
-        (x, y - text_size[1] - 4),
-        (x + text_size[0] + 4, y),
-        color,
-        -1
-    )
-    
-    # Draw text
-    cv2.putText(
-        frame,
-        label,
-        (x + 2, y - 2),
-        font,
-        font_scale,
-        (255, 255, 255),
-        font_thickness
-    )
+    cv2.rectangle(frame, (x, y - text_size[1] - 4), (x + text_size[0] + 4, y), color, -1)
+    cv2.putText(frame, label, (x + 2, y - 2), font, font_scale, (255, 255, 255), font_thickness)
     
     return frame
 
 
 def visualize_sequence(img_dir, tracking_results, gt_results=None, output_video=None, fps=30):
-    """
-    Visualize tracking results on video frames.
-    
+    """    
     Args:
         img_dir: Directory with image frames
         tracking_results: Dict from load_tracking_results
@@ -187,7 +158,7 @@ def visualize_sequence(img_dir, tracking_results, gt_results=None, output_video=
             for gt_obj in gt_results[frame_idx]:
                 gt_id = gt_obj['id']
                 bbox = gt_obj['bbox']
-                gt_color = (200, 150, 0)  # Cyanish for ground truth
+                gt_color = (200, 150, 0)
                 cv2.rectangle(frame, (bbox[0], bbox[1]), (bbox[0] + bbox[2], bbox[1] + bbox[3]), gt_color, 1)
         
         # Draw tracking results
@@ -199,17 +170,7 @@ def visualize_sequence(img_dir, tracking_results, gt_results=None, output_video=
                 frame = draw_bbox(frame, bbox, track_id, color, label_type="track")
         
         # Add frame number
-        cv2.putText(
-            frame,
-            f"Frame: {frame_idx}",
-            (10, 30),
-            cv2.FONT_HERSHEY_SIMPLEX,
-            1,
-            (0, 255, 0),
-            2
-        )
-        
-        # Display frame
+        cv2.putText(frame, f"Frame: {frame_idx}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
         cv2.imshow("Tracking Visualization", frame)
         
         # Write to video file if output path provided
@@ -239,9 +200,7 @@ def visualize_sequence(img_dir, tracking_results, gt_results=None, output_video=
 
 
 def visualize_dataset_sequence(sequence_name, data_dir, gt_base_dir, img_base_dir, output_video=None):
-    """
-    High-level function to visualize a specific dataset sequence.
-    
+    """    
     Args:
         sequence_name: e.g., "MOT_02"
         data_dir: Directory with tracking results (e.g., ../data_test)
@@ -253,7 +212,7 @@ def visualize_dataset_sequence(sequence_name, data_dir, gt_base_dir, img_base_di
     pred_path = os.path.join(data_dir, f"{sequence_name}.txt")
     img_dir = os.path.join(img_base_dir, sequence_name, "img1")
     
-    # For mot-test 
+    # For evs-mot-train
     gt_path = None
     if gt_base_dir is not None:
         gt_path = os.path.join(gt_base_dir, sequence_name, "gt", "gt.txt")
