@@ -122,6 +122,7 @@ if __name__ == "__main__":
                 tracker.update(detections[frame])
                 
                 for track_id, bbox in tracker.get_tracked_objects():
+                    """ tu jest cos nie tak!!!!"""
                     # Format: frame, id, x, y, w, h, conf, class, visibility, unused
                     #<detection_confidence> - miara pewności detektora co do detekcji (w zakresie 0 - 1)
                     #<eval_flag> - flaga informująca, czy dany obiekt jest traktowany jako wzorcowy i powinien być brany pod uwagę w ewaluacji (0 - nie, 1 - tak)
