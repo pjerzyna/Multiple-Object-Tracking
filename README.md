@@ -109,4 +109,4 @@ Test results on training sequences:
 ## References
 
 - SORT: Simple Online and Realtime Tracking (Bewley et al., 2016)
-- MOT Challenge: http://motchallenge.net/
+- MOT Challenge: https://www.codabench.org/competitions/15258/#/pages-tab
