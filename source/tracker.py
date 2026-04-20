@@ -55,18 +55,7 @@ class MultiObjectTracker:
     def predict(self):
         for tracker in self.trackers:
             tracker.predict()
-    
-    def associate(self):
-        # This method should implement the association logic between detections and existing trackers
-        pass
 
-    def create_tracks(self):
-        # This method should create new trackers for unmatched detections
-        pass
-
-    def delete_tracks(self):
-        # This method should delete trackers that have not been updated for a certain number of frames
-        pass
 
     def get_tracked_objects(self):
         return [
