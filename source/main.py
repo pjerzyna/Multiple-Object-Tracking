@@ -14,6 +14,7 @@ from tracker import MultiObjectTracker
 from evaluation import evaluate_sequences
 from visualization import visualize_dataset_sequence
 
+DET_CONFIDENCE_THRESHOLD = 0.35
 
 parser = argparse.ArgumentParser(
     description="MOT dataset parser",
@@ -90,8 +91,7 @@ if __name__ == "__main__":
 
             with open(output_path, "w") as f:
                 for frame in sorted(detections.keys()):
-                    # confidence >= 0.4
-                    valid_detections = [det for det in detections[frame] if det[4] >= 0.4]
+                    valid_detections = [det for det in detections[frame] if det[4] >= DET_CONFIDENCE_THRESHOLD]
                     tracker.update(valid_detections)
                     
                     for track_id, bbox in tracker.get_tracked_objects():
@@ -99,7 +99,7 @@ if __name__ == "__main__":
                         line = f"{frame},{track_id},{bbox[0]:.2f},{bbox[1]:.2f},{bbox[2]:.2f},{bbox[3]:.2f},1,-1,-1,-1\n"
                         f.write(line)
             
-            print(f"✓ {dataset_name} - Result is saved at {output_path}")
+            print(f"{dataset_name} - Result is saved at {output_path}")
         
         print("Processing of the data is done.")
 
@@ -120,8 +120,7 @@ if __name__ == "__main__":
 
         with open(output_path, "w") as f:
             for frame in sorted(detections.keys()):
-                # confidence >= 0.4
-                valid_detections = [det for det in detections[frame] if det[4] >= 0.4]
+                valid_detections = [det for det in detections[frame] if det[4] >= DET_CONFIDENCE_THRESHOLD]
                 tracker.update(valid_detections)
                 
                 for track_id, bbox in tracker.get_tracked_objects():
@@ -130,7 +129,7 @@ if __name__ == "__main__":
                     line = f"{frame},{track_id},{bbox[0]:.2f},{bbox[1]:.2f},{bbox[2]:.2f},{bbox[3]:.2f},1,-1,-1,-1\n"
                     f.write(line)
         
-        print(f"✓ {dataset_name} - Result saved at {output_path}")
+        print(f"{dataset_name} - Result saved at {output_path}")
 
     elif args.mode == "train_tracker":
         # Ensure data_test directory exists
@@ -158,8 +157,7 @@ if __name__ == "__main__":
 
             with open(output_path, "w") as f:
                 for frame in sorted(detections.keys()):
-                    # confidence >= 0.4
-                    valid_detections = [det for det in detections[frame] if det[4] >= 0.4]
+                    valid_detections = [det for det in detections[frame] if det[4] >= DET_CONFIDENCE_THRESHOLD]
                     tracker.update(valid_detections)
                     
                     for track_id, bbox in tracker.get_tracked_objects():
@@ -167,7 +165,7 @@ if __name__ == "__main__":
                         line = f"{frame},{track_id},{bbox[0]:.2f},{bbox[1]:.2f},{bbox[2]:.2f},{bbox[3]:.2f},1,-1,-1,-1\n"
                         f.write(line)
             
-            print(f"✓ {dataset_name} - Result saved at {output_path}")
+            print(f"{dataset_name} - Result saved at {output_path}")
         
         print("Processing of the data is done.")
 
