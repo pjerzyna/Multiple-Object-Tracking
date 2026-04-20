@@ -49,7 +49,7 @@ pip install -r requirements.txt
 cd source
 
 # Process training sequences for validation (MOT_02-05)
-python main.py --mode test_tracker
+python main.py --mode train_tracker
 
 # Evaluate results using MOTA metric
 python main.py --mode evaluation

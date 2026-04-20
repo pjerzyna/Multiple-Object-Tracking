@@ -22,7 +22,7 @@ parser = argparse.ArgumentParser(
 Modes:
   tracker          - Process all test sequences (MOT_01, MOT_06, MOT_07)
   single_tracker   - Process single test sequence (MOT_01)
-  train_tracker    - Process all training sequences (MOT_02-05) for validation
+  train_tracker    - Process all training sequences (MOT_02-05)
   evaluation       - Evaluate results using MOTA metric
   visualization    - Visualize tracking results on video frames
 
